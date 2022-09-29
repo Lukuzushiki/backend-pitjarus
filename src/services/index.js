@@ -3,7 +3,9 @@ const helper = require("../helper");
 const config = require("../config");
 
 async function getProduct(page = 1) {
-  const rows = await db.query(`SELECT * FROM product`);
+  const rows = await db.query(
+    `SELECT product_id, product_name, product_brand.brand_id, product_brand.brand_name FROM product INNER JOIN product_brand ON product.brand_id=product_brand.brand_id`
+  );
   const data = helper.emptyOrRows(rows);
   const meta = { page };
 
@@ -25,7 +27,10 @@ async function getProductBrand(page = 1) {
 }
 
 async function getReportProduct(page = 1) {
-  const rows = await db.query(`SELECT * FROM report_product`);
+  const rows =
+    await db.query(`SELECT report_product.report_id, report_product.compliance, store.store_id, store.area_id, store_area.area_name, report_product.tanggal FROM report_product
+INNER JOIN store ON report_product.store_id = store.store_id
+INNER JOIN store_area ON store.area_id = store_area.area_id`);
   const data = helper.emptyOrRows(rows);
   const meta = { page };
 
